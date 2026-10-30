@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ringo Orbit: One tap. Perfect timing.</title>
+  <meta name="description" content="Ringo Orbit is a one-tap reflex game for Android. Time your tap, chain perfect hits into Hyper Fever, and unlock 10 orb skins.">
+  <meta name="theme-color" content="#0b0f19">
+  <link rel="canonical" href="https://blueamazon.github.io/ringo-orbit/">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/outfit.woff2" as="font" type="font/woff2" crossorigin>
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ringo Orbit: One tap. Perfect timing.">
+  <meta property="og:description" content="A one-tap reflex game for Android. Time your tap, chain perfect hits and unlock 10 orb skins.">
+  <meta property="og:url" content="https://blueamazon.github.io/ringo-orbit/">
+  <meta property="og:image" content="https://blueamazon.github.io/ringo-orbit/assets/feature-graphic.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    @font-face {
+      font-family: 'Outfit';
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url(assets/outfit.woff2) format('woff2');
+    }
+
+    :root {
+      --bg: #0b0f19;
+      --panel: rgba(255, 255, 255, 0.05);
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --gold: #facc15;
+      --cyan: #38bdf8;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 17px;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+
+    a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .wrap {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+    }
+
+    .topbar nav {
+      display: flex;
+      gap: 22px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .topbar nav a {
+      text-decoration: none;
+    }
+
+    .topbar nav a:hover {
+      color: #fff;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      background: radial-gradient(ellipse 70% 60% at 50% 35%, rgba(56, 189, 248, 0.14), transparent 70%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 40px;
+      padding: 40px 0 72px;
+    }
+
+    .logo-ring {
+      position: relative;
+      width: 112px;
+      height: 112px;
+      margin-bottom: 26px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .logo-orbit {
+      position: absolute;
+      inset: 0;
+      animation: orbit 2.2s linear infinite;
+    }
+
+    .logo-ball {
+      position: absolute;
+      top: -7px;
+      left: calc(50% - 7px);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 16px var(--cyan), 0 0 4px #fff;
+    }
+
+    .logo-target {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.8);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .logo-core {
+      position: absolute;
+      top: calc(50% - 13px);
+      left: calc(50% - 13px);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.45);
+    }
+
+    @keyframes orbit {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      50% { transform: scale(1.35); }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(56px, 11vw, 96px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .tagline {
+      margin: 12px 0 0;
+      font-size: clamp(22px, 3.4vw, 30px);
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .lede {
+      max-width: 30em;
+      margin: 16px 0 28px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .badge-soon {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      color: #0f172a;
+      background: linear-gradient(135deg, var(--gold), #f59e0b);
+      box-shadow: 0 8px 26px rgba(250, 204, 21, 0.3);
+    }
+
+    .platform {
+      margin: 12px 0 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Phone-shaped screenshots */
+    .phone {
+      margin: 0;
+      overflow: hidden;
+      border-radius: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.75);
+      background: #11151f;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.08);
+    }
+
+    .hero-phone {
+      width: min(300px, 100%);
+      justify-self: center;
+      transform: rotate(2.5deg);
+    }
+
+    /* Sections */
+    section {
+      padding: 64px 0;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 5vw, 42px);
+      font-weight: 900;
+      line-height: 1.15;
+      color: #fff;
+    }
+
+    .section-intro {
+      max-width: 34em;
+      margin: 0 0 34px;
+      color: var(--muted);
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .steps li {
+      counter-increment: step;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      display: block;
+      margin-bottom: 8px;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--cyan);
+    }
+
+    .steps h3,
+    .mode h3,
+    .perk h3 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .steps p,
+    .mode p,
+    .perk p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    /* Modes */
+    .modes {
+      background: rgba(255, 255, 255, 0.025);
+      border-block: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 44px;
+    }
+
+    .mode {
+      display: grid;
+      grid-template-columns: minmax(0, 190px) minmax(0, 1fr);
+      align-items: center;
+      gap: 24px;
+    }
+
+    .mode .phone {
+      border-radius: 22px;
+      border-width: 2px;
+    }
+
+    .unlocks {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .unlocks strong {
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Skins and progress */
+    .collect-grid {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .collect-grid .phone {
+      width: min(290px, 100%);
+      justify-self: center;
+    }
+
+    .perks {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px 28px;
+    }
+
+    .perk-icon {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    /* Footer */
+    footer {
+      padding: 30px 0 calc(30px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .foot {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 26px;
+    }
+
+    .foot-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 22px;
+    }
+
+    .foot a:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid,
+      .collect-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        padding-top: 20px;
+        text-align: center;
+      }
+
+      .logo-ring {
+        margin-inline: auto;
+      }
+
+      .lede {
+        margin-inline: auto;
+      }
+
+      .hero-phone {
+        width: min(250px, 72%);
+        margin-top: 12px;
+        transform: none;
+      }
+
+      .steps,
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 48px 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .topbar nav a:not(:last-child) {
+        display: none;
+      }
+
+      .mode {
+        grid-template-columns: minmax(0, 130px) minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .perks {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .logo-orbit, .logo-target { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="topbar">
+        <a class="brand" href="./">
+          <img src="assets/favicon.png" alt="" width="30" height="30">
+          <span>RINGO</span>
+        </a>
+        <nav aria-label="Main">
+          <a href="#how">How it works</a>
+          <a href="#modes">Modes</a>
+          <a href="privacy.html">Privacy</a>
+        </nav>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <div class="logo-ring" aria-hidden="true">
+            <div class="logo-orbit"><span class="logo-ball"></span></div>
+            <span class="logo-target"></span>
+            <span class="logo-core"></span>
+          </div>
+          <h1>RINGO</h1>
+          <p class="tagline">One tap. Perfect timing.</p>
+          <p class="lede">A reflex game that's simple to learn and hard to put down. Line up your shot, tap at the right moment, and see how far your streak can go.</p>
+          <div class="badge-soon">Coming soon to Google Play</div>
+          <p class="platform">For Android phones</p>
+        </div>
+        <figure class="phone hero-phone">
+          <img src="assets/home.webp" width="780" height="1688" alt="The Ringo home screen with the animated logo, Orbit and Shooter mode cards, and a Play button.">
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="how">
+      <div class="wrap">
+        <h2>Easy to start. Hard to master.</h2>
+        <p class="section-intro">All you need is one finger. Every hit makes the next one harder.</p>
+        <ol class="steps">
+          <li>
+            <h3>Time your tap</h3>
+            <p>Tap when your orb lines up with the yellow target. Miss, and your run is over.</p>
+          </li>
+          <li>
+            <h3>Chain perfects</h3>
+            <p>Land three dead-centre hits to trigger Hyper Fever and earn double points.</p>
+          </li>
+          <li>
+            <h3>Survive the speed-up</h3>
+            <p>More rings, moving targets, a ticking clock and red hazards all arrive as your score climbs.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="modes" class="modes">
+      <div class="wrap">
+        <h2>Two ways to play</h2>
+        <p class="section-intro">Each mode has its own feel and its own best score to beat.</p>
+        <div class="mode-grid">
+          <article class="mode">
+            <figure class="phone">
+              <img src="assets/orbit.webp" width="780" height="1688" alt="Orbit mode: an orb circling three rings of dots, with a yellow target, a red hazard and an apple in play." loading="lazy">
+            </figure>
+            <div>
+              <h3>🪐 Orbit</h3>
+              <p>Your orb circles the core. Lunge at the target as the rings spin around you.</p>
+              <ul class="unlocks">
+                <li><strong>30</strong> second ring</li>
+                <li><strong>45</strong> third ring</li>
+              </ul>
+            </div>
+          </article>
+          <article class="mode">
+            <figure class="phone">
+              <img src="assets/shooter.webp" width="780" height="1688" alt="Shooter mode: a cannon at the bottom of the screen aiming at a yellow target." loading="lazy">
+            </figure>
+            <div>
+              <h3>🎯 Shooter</h3>
+              <p>The cannon sweeps on its own. Fire when it's aimed true, and watch out for what's in the way.</p>
+              <ul class="unlocks">
+                <li><strong>20</strong> targets start moving</li>
+                <li><strong>30</strong> red mines appear</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="collect">
+      <div class="wrap collect-grid">
+        <figure class="phone">
+          <img src="assets/skins.webp" width="780" height="1688" alt="The skin shop listing orbs such as Neon Comet, Thunder Bolt and Ruby Nova, each with a perk." loading="lazy">
+        </figure>
+        <div>
+          <h2>Always something to chase</h2>
+          <p class="section-intro">Collect loot as you play and spend it on orbs that change how a run goes.</p>
+          <div class="perks">
+            <div class="perk">
+              <span class="perk-icon" aria-hidden="true">🎨</span>
+              <h3>10 orb skins</h3>
+              <p>Each has its own trail and perk, from a shield to a wider hit window.</p>
+            </div>
+            <div class="perk">
+              <span class="perk-icon" aria-hidden="true">📋</span>
+              <h3>Daily missions</h3>
+              <p>Three new missions every day, plus a free daily gift.</p>
+            </div>
+            <div class="perk">
+              <span class="perk-icon" aria-hidden="true">🏅</span>
+              <h3>Achievements</h3>
+              <p>Nine to unlock, including scoring 100 in a single run.</p>
+            </div>
+            <div class="perk">
+              <span class="perk-icon" aria-hidden="true">⭐</span>
+              <h3>Levels and stats</h3>
+              <p>Earn XP from every run and track your all-time numbers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>© 2026 Ringo Orbit</span>
+      <div class="foot-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="mailto:ringoorbitgame@gmail.com">ringoorbitgame@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
